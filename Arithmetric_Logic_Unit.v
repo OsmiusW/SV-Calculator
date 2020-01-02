@@ -1,21 +1,21 @@
+`timescale 1ns / 1ps
+
 //Arithmetic Logic Unit 32-Bit
 
-module Arithmetric_Logic_Unit 
+module Arithmetric_Logic_Unit //Formed using basic systemverilog operators; Trigonometry not yet supported
 	(
 	parameter OPCODE_LENGTH = 5
-	parameter NUM_LENGTH = 9
 	parameter RESULT_WIDTH = 32
 	)
 	(
 	input logic [OPCODE_LENGTH-1:0] Opcode,
-	input logic signed [NUM_LENGTH-1:0] numA,
-	input logic signed [NUM_LENGTH-1:0] numB,
+	input logic signed [RESULT_WIDTH-1:0] numA,
+	input logic signed [RESULT_WIDTH-1:0] numB,
 	output logic signed [RESULT_WIDTH-1:0] numC,
-	output logic [NUM_LENGTH0-1:0] numMEM,
 	};
 	always_comb
 	begin
-		numC = 'd0;
+		numC = 'd0; 
 		case(Opcode)
 			5'b00000: //Add
 				numC = numA + numB;
@@ -31,34 +31,34 @@ module Arithmetric_Logic_Unit
 				numC = numA * numA * numA;
 			5'b00110: //Square Root
 				numC = $sqrt(numA);
-			5'b00111: //Cubed Root
-				numC = ;
+			5'b00111: //2 exponential
+				numC = 2**(numA);
 			5'b01000: //Sine
-				numC = ;
+				numC = numA;
 			5'b01001: //Cosine
-				numC = ;
+				numC = numA;
 			5'b01010: //Tangent
-				numC = ;
+				numC = numA;
 			5'b01011: //Modulo
-				numC = ;
+				numC = numA % numB;
 			5'b01100: //Common Log
-				numC = ;
+				numC = numA;
 			5'b01101: //Natural Log
-				numC = ;
+				numC = numA;
 			5'b01110: //Euler Exponent
-				numC = ;
+				numC = numA;
 			5'b01111: //Pi
 				numC = 'd3.141579;
 			5'b10001: //Memory Add
-				numC = numMEM + numA;
+				numC = numA + numB; //numB contains memory value
 			5'b10010: //Memory Subtract
-				numMEM = numMEM - numA;
+				numC = (~numA + 1) + numB; //numB contains memory value
 			5'b10100: //Memory Rememeber
-				numC = numMEM;
+				numC = numA + numB; //numA should be 0
 			5'b11000: //Memory Clear
 				numC = 'd0;
 				numMEM = 'd0;
-			default:
+			default: //Nothing works or NOP initiated; default 0
 				numC = 'd0;
 		endcase
 	end
@@ -81,7 +81,7 @@ OpCode Data:
 
 00110 Square Root sqrt(a)
 
-00111 Cubed Root cubrt(a)
+00111 Exponent(2,a) 2^a
 
 01000 Sine sin(a)
 
